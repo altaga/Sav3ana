@@ -1,4 +1,4 @@
-import { SOLANA_RPC } from '@env';
+import {SOLANA_RPC} from '@env';
 import {
   createAssociatedTokenAccountInstruction,
   createTransferInstruction,
@@ -12,8 +12,8 @@ import {
   SystemProgram,
   Transaction,
 } from '@solana/web3.js';
-import { ethers } from 'ethers';
-import React, { Component, Fragment } from 'react';
+import {ethers} from 'ethers';
+import React, {Component, Fragment} from 'react';
 import {
   Dimensions,
   Keyboard,
@@ -29,13 +29,10 @@ import LinearGradient from 'react-native-linear-gradient';
 import RNPickerSelect from 'react-native-picker-select';
 import IconIonIcons from 'react-native-vector-icons/Ionicons';
 import Header from '../../components/header';
-import GlobalStyles, { secondaryColor } from '../../styles/styles';
-import { blockchain } from '../../utils/constants';
+import GlobalStyles, {secondaryColor} from '../../styles/styles';
+import {blockchain} from '../../utils/constants';
 import ContextModule from '../../utils/contextModule';
-import {
-  balancedSaving,
-  percentageSaving
-} from '../../utils/utils';
+import {balancedSaving, percentageSaving} from '../../utils/utils';
 import Cam from './components/cam';
 import KeyboardAwareScrollViewComponent from './components/keyboardAvoid';
 
@@ -187,7 +184,6 @@ class SendWallet extends Component {
         this.context.value.protocolSelected === 1
           ? balancedSaving(amount, this.context.value.usdConversion[0])
           : percentageSaving(amount, this.context.value.percentage);
-      console.log(savingsAmount);
       preProcessedInstructions.push({
         to: this.context.value.publicKeySavings,
         amount: ethers.utils.parseUnits(savingsAmount.toFixed(9), 9).toBigInt(),
@@ -201,7 +197,6 @@ class SendWallet extends Component {
     const amountBulk = preProcessedInstructions.map(
       item => item.amountFormatted,
     );
-    console.log(amountBulk);
     const tokenSymbolBulk = preProcessedInstructions.map(
       item => item.token.symbol,
     );
@@ -235,12 +230,12 @@ class SendWallet extends Component {
         // Transaction
         transaction,
         // Simple Display
-        label: 'Bulk Transfer',
-        to: 'Multiple Addresses',
+        label: flag ? 'Bulk Transfer' : 'Transfer',
+        to: flag ? "Multiple Accounts" : this.state.toAddress[0],
         amount,
-        tokenSymbol:
-          // Bulk Display
-          labelBulk,
+        tokenSymbol: 'SOL',
+        // Bulk Display
+        labelBulk,
         toBulk,
         amountBulk,
         tokenSymbolBulk,

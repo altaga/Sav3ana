@@ -188,7 +188,6 @@ class TransactionsModal extends Component {
                       this.context.value.transactionData.to.substring(21)
                     : this.context.value.transactionData.to}
                 </Text>
-
                 <Text
                   style={{
                     textAlign: 'center',

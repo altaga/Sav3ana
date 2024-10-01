@@ -73,7 +73,7 @@ const baseTab3State = {
   // Card
   cvc: randomNumber(111, 999),
   expiry: '1228',
-  name: 'Vault Card',
+  name: 'Sav3ana Card',
   number: generator.GenCC('VISA'),
   imageFront: require('../../../assets/cardAssets/card-front.png'),
   imageBack: require('../../../assets/cardAssets/card-back.png'),

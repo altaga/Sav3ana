@@ -27,8 +27,11 @@ class ContextProvider extends React.Component {
         // Card Wallet
         publicKeyCard: '11111111111111111111111111111111',
         balancesCard: blockchain.tokens.map(() => 0),
+        // Stripe
+        balancesTrad: [0.0, 0.0, 0.0],
         //// Shared
         usdConversion: blockchain.tokens.map(() => '0.0'),
+        usdConversionTrad: blockchain.currencies.map(() => '0.0'),
         // Transaction Active
         isTransactionActive: false, // false
         transactionData: {

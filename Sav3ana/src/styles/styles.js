@@ -180,7 +180,7 @@ const GlobalStyles = StyleSheet.create({
   },
   // Selectors
   selector: {
-    width: Dimensions.get('window').width * 0.3333,
+    width: Dimensions.get('window').width * 0.25,
     height: 'auto',
     justifyContent: 'center',
     alignItems: 'center',

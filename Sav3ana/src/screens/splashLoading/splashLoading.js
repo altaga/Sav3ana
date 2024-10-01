@@ -1,12 +1,12 @@
 // Basic Imports
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import React, { Component } from 'react';
-import { Dimensions, Image, View } from 'react-native';
+import React, {Component} from 'react';
+import {Dimensions, Image, View} from 'react-native';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import logoSplash from '../../assets/logoSplash.png';
 import GlobalStyles from '../../styles/styles';
 import ContextModule from '../../utils/contextModule';
-import { getAsyncStorageValue } from '../../utils/utils';
+import {getAsyncStorageValue} from '../../utils/utils';
 
 class SplashLoading extends Component {
   constructor(props) {
@@ -35,8 +35,13 @@ class SplashLoading extends Component {
         // Card wallet
         const publicKeyCard = await getAsyncStorageValue('publicKeyCard');
         const balancesCard = await getAsyncStorageValue('balancesCard');
+        // Stripe
+        const balancesTrad = await getAsyncStorageValue('balancesTrad');
         // Shared
         const usdConversion = await getAsyncStorageValue('usdConversion');
+        const usdConversionTrad = await getAsyncStorageValue(
+          'usdConversionTrad',
+        );
         this.context.setValue({
           // Base Wallet
           publicKey: publicKey ?? this.context.value.publicKey,
@@ -55,10 +60,14 @@ class SplashLoading extends Component {
           // Card Wallet
           publicKeyCard: publicKeyCard ?? this.context.value.publicKeyCard,
           balancesCard: balancesCard ?? this.context.value.balancesCard,
+          // Stripe
+          balancesTrad: balancesTrad ?? this.context.value.balancesTrad,
           // Shared
           usdConversion: usdConversion ?? this.context.value.usdConversion,
+          usdConversionTrad:
+            usdConversionTrad ?? this.context.value.usdConversionTrad,
         });
-        this.props.navigation.navigate('Main');
+        this.props.navigation.navigate('Main'); // Main
       } else {
         this.props.navigation.navigate('Setup');
       }

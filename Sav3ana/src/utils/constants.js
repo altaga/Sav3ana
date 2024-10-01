@@ -1,9 +1,14 @@
-import { Image } from 'react-native';
+import {Image} from 'react-native';
+// Blockchain
 import EURC from '../assets/logos/eurc.png';
 import SOL from '../assets/logos/sol.png';
 import USDC from '../assets/logos/usdc.png';
 import USDT from '../assets/logos/usdt.png';
 import WETH from '../assets/logos/weth.png';
+// TradFi
+import USD from '../assets/logos/usd.png';
+import EUR from '../assets/logos/eur.png';
+import MXN from '../assets/logos/mxn.png';
 
 const w = 50;
 const h = 50;
@@ -19,6 +24,12 @@ export const iconsBlockchain = {
   usdt: <Image source={USDT} style={{width: w, height: h, borderRadius: 10}} />,
   weth: <Image source={WETH} style={{width: w, height: h, borderRadius: 10}} />,
 };
+
+export const iconsTradFi = {
+  usd: <Image source={USD} style={{width: w, height: h, borderRadius: 10}} />,
+  eur: <Image source={EUR} style={{width: w, height: h, borderRadius: 10}} />,
+  mxn: <Image source={MXN} style={{width: w, height: h, borderRadius: 10}} />,
+}
 
 // Devnet
 export const blockchain = {
@@ -55,56 +66,85 @@ export const blockchain = {
       coingecko: 'euro-coin',
     },
   ],
-};
-
-export const blockchainMain = {
-  network: 'Solana',
-  token: 'SOL',
-  blockExplorer: 'https://solscan.io/',
-  cluster: 'mainnet', //mainnet
-  iconSymbol: 'sol',
-  decimals: 9,
-  tokens: [
-    // Updated 05/MAY/2024
+  currencies: [
     {
-      name: 'Solana',
-      symbol: 'SOL',
-      address: 'So11111111111111111111111111111111111111112',
-      decimals: 9,
-      icon: iconsBlockchain.sol,
-      coingecko: 'solana',
-    },
-    {
-      name: 'USD Coin',
-      symbol: 'USDC',
-      address: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
-      decimals: 6,
-      icon: iconsBlockchain.usdc,
+      name: 'US Dollar',
+      symbol: 'USD',
+      address: 'none',
+      decimals: 2,
+      icon: iconsTradFi.usd,
       coingecko: 'usd-coin',
     },
     {
-      name: 'Euro Coin',
-      symbol: 'EURC',
-      address: 'HzwqbKZw8HxMN6bF2yFZNrht3c2iXXzpKcFu7uBEDKtr',
-      decimals: 6,
-      icon: iconsBlockchain.eurc,
-      coingecko: 'euro-coin',
+      name: 'Euro',
+      symbol: 'EUR',
+      address: 'none',
+      decimals: 2,
+      icon: iconsTradFi.eur,
+      coingecko: 'tether-eurt',
     },
     {
-      name: 'Tether',
-      symbol: 'USDT',
-      address: 'Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB',
-      decimals: 6,
-      icon: iconsBlockchain.usdt,
-      coingecko: 'tether',
+      name: 'Mexican Peso',
+      symbol: 'MXN',
+      address: 'none',
+      decimals: 2,
+      icon: iconsTradFi.mxn,
+      coingecko: 'mexican-peso-tether',
     },
   ],
 };
 
+/**
+  export const blockchainMain = {
+    network: 'Solana',
+    token: 'SOL',
+    blockExplorer: 'https://solscan.io/',
+    cluster: 'mainnet', //mainnet
+    iconSymbol: 'sol',
+    decimals: 9,
+    tokens: [
+      // Updated 05/MAY/2024
+      {
+        name: 'Solana',
+        symbol: 'SOL',
+        address: 'So11111111111111111111111111111111111111112',
+        decimals: 9,
+        icon: iconsBlockchain.sol,
+        coingecko: 'solana',
+      },
+      {
+        name: 'USD Coin',
+        symbol: 'USDC',
+        address: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
+        decimals: 6,
+        icon: iconsBlockchain.usdc,
+        coingecko: 'usd-coin',
+      },
+      {
+        name: 'Euro Coin',
+        symbol: 'EURC',
+        address: 'HzwqbKZw8HxMN6bF2yFZNrht3c2iXXzpKcFu7uBEDKtr',
+        decimals: 6,
+        icon: iconsBlockchain.eurc,
+        coingecko: 'euro-coin',
+      },
+      {
+        name: 'Tether',
+        symbol: 'USDT',
+        address: 'Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB',
+        decimals: 6,
+        icon: iconsBlockchain.usdt,
+        coingecko: 'tether',
+      },
+    ],
+  };
+*/
+
 export const CloudAccountController =
   '8MwdDuw66kKisAVmh6RjiP8QDMckUkM71fSGCC6c8vCH';
 
-export const SolanaCardProgramID = 'FPc4TkPFx8hjYpnFGg4hTRVJf2CNkKNf8R2aYehybNvX';
+export const SolanaCardProgramID =
+  'FPc4TkPFx8hjYpnFGg4hTRVJf2CNkKNf8R2aYehybNvX';
 
 export const CloudPublicKeyEncryption = `
 -----BEGIN RSA PUBLIC KEY-----
@@ -130,30 +170,30 @@ g5atj1oLBlgH6N/9aUIlP5gkw89O3hYJ0QIDAQAB
 
 export const cardMemorySchema = {
   struct: {
-    owner: { array: { type: "u8", len: 32 } },
-    nfc: "bool", // Activate or Deactivate
-    types: "bool", // Physical or Virtual 
-    kind: "u8", // Debit, Credit, etc
-    brand : "u8", // VISA, MASTERCARD, etc
+    owner: {array: {type: 'u8', len: 32}},
+    nfc: 'bool', // Activate or Deactivate
+    types: 'bool', // Physical or Virtual
+    kind: 'u8', // Debit, Credit, etc
+    brand: 'u8', // VISA, MASTERCARD, etc
   },
 };
 
 export const transactionPayloadSchema = {
   struct: {
-    instruction: "u8",
-    bump: "u8",
-    space: "u8",
+    instruction: 'u8',
+    bump: 'u8',
+    space: 'u8',
     ...cardMemorySchema.struct,
   },
 };
 
 export const paymentPayloadSchema = {
   struct: {
-    instruction: "u8",
-    bump: "u8",
-    owner: { array: { type: "u8", len: 32 } },
-    amount: "u64",
-    concept: "string",
+    instruction: 'u8',
+    bump: 'u8',
+    owner: {array: {type: 'u8', len: 32}},
+    amount: 'u64',
+    concept: 'string',
   },
 };
 
@@ -163,4 +203,3 @@ export const ProgramInstruction = {
   Purchase: 2,
   PurchaseToken: 3,
 };
-

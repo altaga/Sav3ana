@@ -1,6 +1,5 @@
-import {SOLANA_RPC} from '@env';
-import {getAssociatedTokenAddressSync} from '@solana/spl-token';
-import {Connection, PublicKey} from '@solana/web3.js';
+import {SOLANA_RPC, STRIPE_APIKEY, STRIPE_CLIENT} from '@env';
+import {Connection} from '@solana/web3.js';
 import {ethers} from 'ethers';
 import React, {Component} from 'react';
 import {Pressable, RefreshControl, ScrollView, Text, View} from 'react-native';
@@ -22,7 +21,7 @@ const baseTab1State = {
   nfcSupported: true,
 };
 
-class Tab1 extends Component {
+class Tab4 extends Component {
   constructor(props) {
     super(props);
     this.state = baseTab1State;
@@ -32,10 +31,9 @@ class Tab1 extends Component {
   static contextType = ContextModule;
 
   async componentDidMount() {
-    console.log(this.context.value.publicKey);
     const lastRefresh = await this.getLastRefresh();
     if (Date.now() - lastRefresh >= refreshTime) {
-      await setAsyncStorageValue({lastRefresh: Date.now().toString()});
+      await setAsyncStorageValue({lastRefreshTrad: Date.now().toString()});
       this.refresh();
     } else {
       console.log(
@@ -59,46 +57,59 @@ class Tab1 extends Component {
 
   async refresh() {
     await this.setStateAsync({refreshing: true});
-    await Promise.all([this.getUSD(), this.getBalances()]);
+    await Promise.all([this.getBalances(), this.getUSD()]);
     await this.setStateAsync({refreshing: false});
   }
 
   // Get Balances
 
   async getBalances() {
-    const publicKey = new PublicKey(this.context.value.publicKey);
-    let tokens = [...blockchain.tokens];
-    tokens.shift();
-    const tokenAccounts = tokens.map(token =>
-      getAssociatedTokenAddressSync(new PublicKey(token.address), publicKey),
-    );
-    const balanceSol = await this.provider.getBalance(publicKey);
-    const balanceTokens = await Promise.all(
-      tokenAccounts.map(async account => {
-        try {
-          const balance = await this.provider.getTokenAccountBalance(account);
-          return balance;
-        } catch (error) {
-          return {value: {amount: 0}};
+    const myHeaders = new Headers();
+    myHeaders.append('Authorization', `Bearer ${STRIPE_APIKEY}`);
+    const requestOptions = {
+      method: 'GET',
+      headers: myHeaders,
+      redirect: 'follow',
+    };
+
+    fetch(
+      `https://api.stripe.com/v1/customers/${STRIPE_CLIENT}/cash_balance`,
+      requestOptions,
+    )
+      .then(response => response.json())
+      .then(async result => {
+        if (result.error) {
+          this.context.setValue({balancesTrad: [0.0, 0.0, 0.0]});
+          await setAsyncStorageValue({balancesTrad: [0.0, 0.0, 0.0]});
+        } else {
+          let balancesTrad = [
+            ethers.utils.formatUnits(
+              result.available.usd ?? 0.0,
+              blockchain.currencies[0].decimals,
+            ),
+            ethers.utils.formatUnits(
+              result.available.eur ?? 0.0,
+              blockchain.currencies[1].decimals,
+            ),
+            ethers.utils.formatUnits(
+              result.available.mxn ?? 0.0,
+              blockchain.currencies[2].decimals,
+            ),
+          ];
+          console.log(balancesTrad);
+          this.context.setValue({
+            balancesTrad,
+          });
+          await setAsyncStorageValue({
+            balancesTrad,
+          });
         }
-      }),
-    );
-    const balancesTemp = [
-      balanceSol,
-      ...balanceTokens.map(balance => balance.value.amount),
-    ];
-    const balances = blockchain.tokens.map((token, index) =>
-      ethers.utils.formatUnits(balancesTemp[index], token.decimals),
-    );
-    await setAsyncStorageValue({balances});
-    this.context.setValue({balances});
-    console.log('balances', balances);
+      })
+      .catch(error => console.error(error));
   }
 
-  // USD Conversions
-
   async getUSD() {
-    const array = blockchain.tokens.map(token => token.coingecko);
+    const array = blockchain.currencies.map(token => token.coingecko);
     var myHeaders = new Headers();
     myHeaders.append('accept', 'application/json');
     var requestOptions = {
@@ -112,18 +123,22 @@ class Tab1 extends Component {
       requestOptions,
     );
     const result = await response.json();
-    const usdConversion = array.map(x => result[x].usd);
-    setAsyncStorageValue({usdConversion});
-    this.context.setValue({usdConversion});
+    const usdConversionTrad = array.map((x, index) =>
+      index === 0 ? 1 : result[x].usd,
+    );
+    setAsyncStorageValue({usdConversionTrad});
+    this.context.setValue({usdConversionTrad});
   }
+
+  // USD Conversions
 
   async getLastRefresh() {
     try {
-      const lastRefresh = await getAsyncStorageValue('lastRefresh');
+      const lastRefresh = await getAsyncStorageValue('lastRefreshTrad');
       if (lastRefresh === null) throw 'Set First Date';
       return lastRefresh;
     } catch (err) {
-      await setAsyncStorageValue({lastRefresh: '0'.toString()});
+      await setAsyncStorageValue({lastRefreshTrad: '0'.toString()});
       return 0;
     }
   }
@@ -145,14 +160,10 @@ class Tab1 extends Component {
               paddingVertical: 20,
             }}
             colors={['#000000', '#1a1a1a', '#000000']}>
-            <Text style={GlobalStyles.title}>Account Balance</Text>
+            <Text style={GlobalStyles.title}>TradFi Balance</Text>
             <Text style={[GlobalStyles.balance]}>
               {`$ ${epsilonRound(
-                arraySum(
-                  this.context.value.balances.map(
-                    (x, i) => x * this.context.value.usdConversion[i],
-                  ),
-                ),
+                arraySum(this.context.value.balancesTrad),
                 2,
               )} USD`}
             </Text>
@@ -166,19 +177,7 @@ class Tab1 extends Component {
             }}>
             <View style={{justifyContent: 'center', alignItems: 'center'}}>
               <Pressable
-                onPress={() => this.props.navigation.navigate('SendWallet')}
-                style={GlobalStyles.singleButton}>
-                <IconIonicons
-                  name="arrow-up-outline"
-                  size={iconSize}
-                  color={'white'}
-                />
-              </Pressable>
-              <Text style={GlobalStyles.singleButtonText}>Send</Text>
-            </View>
-            <View style={{justifyContent: 'center', alignItems: 'center'}}>
-              <Pressable
-                onPress={() => this.props.navigation.navigate('DepositWallet')}
+                onPress={() => this.props.navigation.navigate('DepositTradFi')}
                 style={GlobalStyles.singleButton}>
                 <IconIonicons
                   name="arrow-down-outline"
@@ -192,7 +191,7 @@ class Tab1 extends Component {
               <Pressable
                 onPress={() =>
                   this.props.navigation.navigate('TopUp', {
-                    crypto: true,
+                    crypto: false,
                   })
                 }
                 style={GlobalStyles.singleButton}>
@@ -200,18 +199,6 @@ class Tab1 extends Component {
               </Pressable>
               <Text style={GlobalStyles.singleButtonText}>Top Up</Text>
             </View>
-            {this.state.nfcSupported && (
-              <View style={{justifyContent: 'center', alignItems: 'center'}}>
-                <Pressable
-                  onPress={() =>
-                    this.props.navigation.navigate('PaymentWallet')
-                  }
-                  style={GlobalStyles.singleButton}>
-                  <IconIonicons name="card" size={iconSize} color={'white'} />
-                </Pressable>
-                <Text style={GlobalStyles.singleButtonText}>{'Payment'}</Text>
-              </View>
-            )}
           </View>
         </View>
         <ScrollView
@@ -221,7 +208,7 @@ class Tab1 extends Component {
               refreshing={this.state.refreshing}
               onRefresh={async () => {
                 await setAsyncStorageValue({
-                  lastRefresh: Date.now().toString(),
+                  lastRefreshTrad: Date.now().toString(),
                 });
                 await this.refresh();
               }}
@@ -233,7 +220,7 @@ class Tab1 extends Component {
             justifyContent: 'flex-start',
             alignItems: 'center',
           }}>
-          {blockchain.tokens.map((token, index) => (
+          {blockchain.currencies.map((token, index) => (
             <View key={index} style={GlobalStyles.network}>
               <View
                 style={{
@@ -255,19 +242,19 @@ class Tab1 extends Component {
                       justifyContent: 'flex-start',
                     }}>
                     <Text style={{fontSize: 12, color: 'white'}}>
-                      {this.context.value.balances[index] === 0
+                      {this.context.value.balancesTrad[index] === 0
                         ? '0'
-                        : this.context.value.balances[index] < 0.001
+                        : this.context.value.balancesTrad[index] < 0.01
                         ? '<0.01'
                         : epsilonRound(
-                            this.context.value.balances[index],
+                            this.context.value.balancesTrad[index],
                             2,
                           )}{' '}
                       {token.symbol}
                     </Text>
                     <Text style={{fontSize: 12, color: 'white'}}>
                       {`  -  ($${epsilonRound(
-                        this.context.value.usdConversion[index],
+                        this.context.value.usdConversionTrad[index],
                         4,
                       )} USD)`}
                     </Text>
@@ -278,8 +265,8 @@ class Tab1 extends Component {
                 <Text style={{color: 'white'}}>
                   $
                   {epsilonRound(
-                    this.context.value.balances[index] *
-                      this.context.value.usdConversion[index],
+                    this.context.value.balancesTrad[index] *
+                      this.context.value.usdConversionTrad[index],
                     2,
                   )}{' '}
                   USD
@@ -293,4 +280,4 @@ class Tab1 extends Component {
   }
 }
 
-export default Tab1;
+export default Tab4;
