@@ -338,6 +338,7 @@ class PaymentWallet extends Component {
                 <ReadCard
                   cardInfo={async cardInfo => {
                     if (cardInfo) {
+                      console.log(cardInfo);
                       await this.setStateAsync({cardInfo});
                       try {
                         const publicKeyCard = await this.getAddressFromCard();
