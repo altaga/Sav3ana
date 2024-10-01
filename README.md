@@ -48,8 +48,8 @@ Una vez estan listas todas las transacciones, procederemos a presionar el boton 
 
 Todo el proceso de realizar una trasaccion unica se realiza mediante el siguiente codigo.
 
-- [CODE SEND](./Sav3ana/src/screens/sendWallet/sendWallet.js)
-- [CODE MODAL](./Sav3ana/src/utils/transactionsModal.js)
+- [SEND CODE](./Sav3ana/src/screens/sendWallet/sendWallet.js)
+- [MODAL CODE](./Sav3ana/src/utils/transactionsModal.js)
 
 ## Smart Savings:
 
@@ -125,7 +125,7 @@ Las tarjetas de pagos no son solo un chip NFC tradicional, de echo estan mas ase
 Asi que implementamos esta lectura de tarjeta para poder leer los datos sensibles de ls tarjetas de pagos y con esto poder generarles una tarjeta virtual que pudiera usarse para pagos crypto.
 
 All technical implementations for this feature are included here.
-- [CODE](./Sav3ana/src/screens/main/components/readCard.js)
+- [READ CARD CODE](./Sav3ana/src/screens/main/components/readCard.js)
 
 ### Virtual Card:
 
