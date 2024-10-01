@@ -1,5 +1,4 @@
-import { GOOGLE_URL_API, SOLANA_RPC } from '@env';
-import { getAssociatedTokenAddressSync } from '@solana/spl-token';
+import { GOOGLE_URL_API, SOLANA_RPC, VYBE_APIKEY } from '@env';
 import { Connection, PublicKey } from '@solana/web3.js';
 import { ethers } from 'ethers';
 import React, { Component, Fragment } from 'react';
@@ -24,19 +23,19 @@ import Header from '../../components/header';
 import GlobalStyles, {
   mainColor,
   secondaryColor,
-  tertiaryColor
+  tertiaryColor,
 } from '../../styles/styles';
 import {
   CloudPublicKeyEncryption,
   basePublicKey,
-  blockchain
+  blockchain,
 } from '../../utils/constants';
 import ContextModule from '../../utils/contextModule';
 import {
   deleteLeadingZeros,
   epsilonRound,
   findIndexByProperty,
-  formatInputText
+  formatInputText,
 } from '../../utils/utils';
 import ReadCard from './components/readCard';
 
@@ -161,7 +160,7 @@ class PaymentWallet extends Component {
         amount: epsilonRound(amountCrypto, blockchain.tokens[index].decimals),
         decimals: blockchain.tokens[index].decimals,
         tokenAddress: blockchain.tokens[index].address,
-        concept:"Payment",
+        concept: 'Payment',
       });
       await this.setStateAsync({
         transactionDisplay: {
@@ -222,38 +221,41 @@ class PaymentWallet extends Component {
     const publicKey = new PublicKey(this.state.publicKeyCard);
     let tokens = [...blockchain.tokens];
     tokens.shift();
-    const tokenAccounts = tokens.map(token =>
-      getAssociatedTokenAddressSync(
-        new PublicKey(token.address),
-        publicKey,
-        true,
-      ),
+    const myHeaders = new Headers();
+    myHeaders.append(
+      'X-API-KEY',
+      VYBE_APIKEY,
     );
-    const balanceSol = await this.provider.getBalance(publicKey);
-    const balanceTokens = await Promise.all(
-      tokenAccounts.map(async account => {
-        try {
-          const balance = await this.provider.getTokenAccountBalance(account);
-          return balance;
-        } catch (error) {
-          return {value: {amount: 0}};
-        }
-      }),
-    );
-    const balancesTemp = [
-      balanceSol,
-      ...balanceTokens.map(balance => balance.value.amount),
-    ];
-    const balances = blockchain.tokens.map((token, index) =>
-      ethers.utils.formatUnits(balancesTemp[index], token.decimals),
-    );
-    const activeTokens = balances.map(
-      (tokenBalance, index) =>
-        tokenBalance >=
-        parseFloat(deleteLeadingZeros(formatInputText(this.state.amount))) /
-          this.context.value.usdConversion[index],
-    );
-    await this.setStateAsync({balances, activeTokens, stage: 2});
+    myHeaders.append('accept', 'application/json');
+    const requestOptions = {
+      method: 'GET',
+      headers: myHeaders,
+      redirect: 'follow',
+    };
+
+    fetch(
+      `https://api.vybenetwork.xyz/account/token-balance/${publicKey}`,
+      requestOptions,
+    )
+      .then(response => response.json())
+      .then(async result => {
+        const balancesTemp = [
+          result.data.find(object => object["SOL"] === value).amount,
+          result.data.find(object => object["USDC"] === value).amount,
+          result.data.find(object => object["EUR"] === value).amount
+        ];
+        const balances = blockchain.tokens.map((token, index) =>
+          ethers.utils.formatUnits(balancesTemp[index], token.decimals),
+        );
+        const activeTokens = balances.map(
+          (tokenBalance, index) =>
+            tokenBalance >=
+            parseFloat(deleteLeadingZeros(formatInputText(this.state.amount))) /
+              this.context.value.usdConversion[index],
+        );
+        await this.setStateAsync({balances, activeTokens, stage: 2});
+      })
+      .catch(error => console.error(error));
   }
 
   // Utils
