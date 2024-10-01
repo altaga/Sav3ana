@@ -1,6 +1,6 @@
 # Sav3ana
  
-Safe Vault: Batch transactions, smart savings, easy card payments and On/Off Ramp.
+Sav3ana: Batch transactions, smart savings, easy card payments and On/Off Ramp.
 
 <img src="./Images/thumb.png">
 
