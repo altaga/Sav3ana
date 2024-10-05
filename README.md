@@ -28,6 +28,8 @@ VIDEODEMO: [VIDEO](pending...)
 
 - Google Cloud: todos los servicios como Stripe estan configurados en la nube de google cloud debido a las credenciales privadas que estos servicios utilizan.
 
+- Vybe: con el fin de obtener informacion rapida y fiel de la chain optamos por utilizar Vybe Netowork API.
+
 # Features:
 
 Nuestra aplicacion como lo hemos mencionado anteriormente tiene como fin aumentar la adopcion de crypto, mejorar la salud financiera de los usuarios y darles mas acceso a servicios sin todas las asperezas de los bancos tradicionales.[1](#references)
@@ -200,6 +202,30 @@ All technical implementations for this tab are included here.
 
 - [TAB CODE](./Sav3ana/src/screens/main/tabs/tab4.js)
 - [CLOUD TOPUP](./Cloud/TopUp/index.js)
+
+## Vybe Network:
+
+Se utilizo la siguiente API de Vybe Network con el fin de mejorar la UI de nuestra aplicacion asi como obtener datos de forma mas fiable y sencilla.
+
+- Token Balance: Debido a que tenemos que estar monitorizando los balances simultaneamente de 3 cuentas que estan ligadas a nuestra app, ademas de ver el balance de multiples tokens, se decidio utilizar esta API.
+
+        fetch(
+            `https://api.vybenetwork.xyz/account/token-balance/${publicKey}`,
+            requestOptions,
+        )
+            .then(response => response.json())
+            .then(async result => {
+                const balancesTemp = [
+                result.data.find(object => object["SOL"] === value).amount,
+                result.data.find(object => object["USDC"] === value).amount,
+                result.data.find(object => object["EUR"] === value).amount
+            ];
+            ...
+            })
+
+All technical implementations for this tab are included here.
+
+- [VYBE CODE](https://github.com/altaga/Sav3ana/blob/vybe/Sav3ana/src/screens/main/tabs/tab1.js)
 
 # References:
 
