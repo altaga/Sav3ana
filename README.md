@@ -20,54 +20,54 @@ VIDEODEMO: [VIDEO](pending...)
 
 - Savings Account: This wallet, like the previous one, is a Non Custodial Wallet, which will save the savings on each transaction according to the chosen savings protocol.
 
-- Card Account: Esta wallet esta basada en una PDA Account controlada por un Program, esto con el fin de usarse como una "Smart Contract Wallet". Mas detalles en la seccion [Card Payments](#card-payments)
+- Card Account: This wallet is based on a PDA Account controlled by a Program, in order to be used as a "Smart Contract Wallet". More details in the section [Card Payments](#card-payments)
 
 - Batch Transactions: Through Solana network, it is possible to carry out several batch transactions using a single signature, this allows us all the incredible functionalities of our wallet.
 
-- Stripe: Mediante los servicios financieros de Stripe podemos realizar On/Off ramp directamente desde nuestra wallet con un simple click. Mas detalles en [On/Off Ramp](#onoff-ramp)
+- Stripe: Using Stripe financial services we can perform On/Off ramp directly from our wallet with a simple click. More details at [On/Off Ramp](#onoff-ramp)
 
-- Google Cloud: todos los servicios como Stripe estan configurados en la nube de google cloud debido a las credenciales privadas que estos servicios utilizan.
+- Google Cloud: All services like Stripe are configured on the Google Cloud due to the private credentials these services use.
 
-- Vybe: con el fin de obtener informacion rapida y fiel de la chain optamos por utilizar Vybe Netowork API.
-
+- Vybe: In order to obtain fast and accurate information about the chain, we chose to use Vybe Network API.
+  
 # Features:
 
-Nuestra aplicacion como lo hemos mencionado anteriormente tiene como fin aumentar la adopcion de crypto, mejorar la salud financiera de los usuarios y darles mas acceso a servicios sin todas las asperezas de los bancos tradicionales.[1](#references)
+Our app, as we mentioned before, aims to increase crypto adoption, improve the financial health of users, and give them more access to services without all the hassles of traditional banks.[1](#references)
 
 ## Batch Transactions:
 
-Solana siempre ha tenido la capacidad de realizar multiples transacciones con una sola firma, sin embargo nosotros decidimos implementar una forma de realizar este tipo de transacciones directamente desde nuestra UI, con el fin de poder hacer todo tipo de transferencias multiples mediante una transaccion unica.[2](#references)
+Solana has always had the ability to perform multiple transactions with a single signature, however we decided to implement a way to perform these types of transactions directly from our UI, in order to be able to do all types of multiple transfers through a single transaction. [2](#references)
 
 ### Screen:
 
-Para hacer uso de esta feature deberas entrar al boton de Send, este mostrara las una form que deberemos llenar con todas las transacciones que desees.
+To use this feature you must enter the Send button, this will show a form that we must fill out with all the transactions you want.
 
 <img src="./Images/batch1.png" width="32%"> <img src="./Images/batch2.png" width="32%"> <img src="./Images/batch3.png" width="32%">
 
-Una vez estan listas todas las transacciones, procederemos a presionar el boton de Check, esto ejcutara una simulacion de la transaccion y mostrara los detalles de la transaccion y si todo es correcto podremos ejecutarla con el boton Execute. Y unos milisegundos despues veremos la confirmacion y un enlace al explorer.
+Once all the transactions are ready, we will press the Check button. This will run a simulation of the transaction and show the details of the transaction. If everything is correct, we can execute it with the Execute button. A few milliseconds later, we will see the confirmation and a link to the explorer.
 
 <img src="./Images/batch4.png" width="32%"> <img src="./Images/batch5.png" width="32%"> <img src="./Images/batch6.png" width="32%">
 
-Todo el proceso de realizar una trasaccion unica se realiza mediante el siguiente codigo.
+The entire process of making a single transaction is done using the following code.
 
 - [SEND CODE](./Sav3ana/src/screens/sendWallet/sendWallet.js)
 - [MODAL CODE](./Sav3ana/src/utils/transactionsModal.js)
 
 ## Smart Savings:
 
-Una de las misiones de nuestra aplicacion es incentivar el ahorro constante, esto normalmente se realiza mediante educacion financiera y buenos habitos de consumo. Sin embargo nosotros vamos un paso mas alla, realizamos pequeños ahorros en cada compra y transaccion que haga el usuario.
+One of the missions of our application is to encourage constant savings, this is normally done through financial education and good consumption habits. However, we go one step further, we make small savings in each purchase and transaction that the user makes.
 
-La cuenta de savings tiene un par de funciones personalizables.
+The savings account has a couple of customizable functions.
 
-- Activate Savings: Este switch permite encender y apagar la cuenta de ahorro, con el fin de que usuario pueda parar de adjuntar las transacciones de ahorro en cada compra.
-  
-- Savings Period: Este menu desplegable le da al usuario fijar una meta de ahorro, ya sea diario, semanal, mensual o anual. NOTE: Por ahora es posible cambiarlo sin limitaciones, pero queremos que el usuario no pueda quitar la fecha fija de su ahorro hasta que se cumpla el plazo.
+- Activate Savings: This switch allows you to turn the savings account on and off, so that the user can stop attaching savings transactions to each purchase.
 
-- Savings Protocol: Este menu desplegable nos da dos opciones, ahorro porcentual, que tomara el porcentaje que configuremos en cada compra o los smart savings, este protocolo lo explicaremos mas adelante. [HERE](#savings-protocols)
+- Savings Period: This drop-down menu allows the user to set a savings goal, whether daily, weekly, monthly or yearly. NOTE: For now it is possible to change it without limitations, but we do not want the user to be able to remove the fixed date of their savings until the deadline is met.
+
+- Savings Protocol: This drop-down menu gives us two options, percentage savings, which will take the percentage that we configure in each purchase or smart savings, this protocol will be explained later. [HERE](#savings-protocols)
 
 ### Screen:
 
-El ahorro que realiza la savings wallet por el momento es basado en SOL, pero en el futuro vamos a incluir stablecoins como USDC.
+The savings wallet currently makes savings based on SOL, but in the future we will include stablecoins such as USDC.
 
 <img src="./Images/save1.png" width="32%"> <img src="./Images/save2.png" width="32%"> <img src="./Images/save3.png" width="32%">
 
@@ -116,26 +116,26 @@ All technical implementations for this protocols are included here.
 
 ## Card Payments:
 
-Parte de la adopcion de crypto al dia a dia de la gente es poder utilizarlo al igual que usan su celular o tarjeta para realizar pagos, pero sin descuidar la seguridad y decentralizacion de crypto.[3](#references)
+Part of people's daily adoption of crypto is being able to use it in the same way they use their cell phone or card to make payments, but without neglecting the security and decentralization of crypto. [3](#references)
 
 ### Contactless Payment:
 
-Las tarjetas de pagos no son solo un chip NFC tradicional, de echo estan mas asememejados a pequeñas computradoras con programas instalados, los cuales se ejecutan en milisegunos al momento que se esta escaneando el chip [4](#references).
+Payment cards are not just a traditional NFC chip, in fact they are more like small computers with installed programs, which run in milliseconds at the time the chip is being scanned.[4](#references).
 
 <img src="./Images/emv1.jpg" width="100%">
 
-Asi que implementamos esta lectura de tarjeta para poder leer los datos sensibles de ls tarjetas de pagos y con esto poder generarles una tarjeta virtual que pudiera usarse para pagos crypto.
+So we implemented this card reading to be able to read the sensitive data of the payment cards and with this be able to generate a virtual card that could be used for crypto payments.
 
 All technical implementations for this feature are included here.
 - [READ CARD CODE](./Sav3ana/src/screens/main/components/readCard.js)
 
 ### Virtual Card:
 
-Sin embargo, surge un desafío adicional: ¿cómo garantizamos que las tarjetas virtuales y los fondos que contienen mantengan la descentralización, asegurando que los activos sigan siendo propiedad del usuario? Es importante recordar que los pagos con tarjeta no implicarán la intervención directa de la wallet.
+However, an additional challenge arises: how do we ensure that virtual cards and the funds they contain maintain decentralization, ensuring that the assets remain the property of the user? It is important to remember that card payments will not involve direct intervention by the wallet.
 
 <img src="./Images/vcd.png" width="100%">
 
-Este problema no se puede resolver con una EOA Wallet en modalidad de Custodial Wallet, ya que las claves privadas no estarían bajo el control del usuario. La solución consiste en desarrollar un programa que genere "Virtual Cards" utilizando PDA's (Program Derived Addresses), lo que permite mantener la descentralización y el control del usuario sobre sus activos.
+This problem cannot be solved with an EOA Wallet in Custodial Wallet mode, since the private keys would not be under the user's control. The solution consists of developing a program that generates "Virtual Cards" using PDA's (Program Derived Addresses), which allows maintaining decentralization and user control over their assets.
 
 All technical implementations for this program are included here.
 - [PROGRAM CODE](./Programs/src/lib.rs)
@@ -143,20 +143,20 @@ All technical implementations for this program are included here.
 
 ### Program:
 
-El programa tiene 4 funciones fundamentales, el codigo esta perfectamente comentado, si quieres profundizar en su funcionamiento porfavor mira el codigo que hemos compartido en el repositorio.
+The program has 4 fundamental functions, the code is perfectly commented, if you want to delve deeper into its operation please look at the code we have shared in the repository.
 
-- Create Card: Esta funcion genera una PDA con los datos que le proporcionemos, la PDA al poder almacenar informacion, nosotros le agregamos informacion publica que nos permita mejorar la funcionalidad.
+- Create Card: This function generates a PDA with the data we provide, the PDA to be able to store information, we add public information that allows us to improve functionality.
   -   owner: [u8; 32], // Card Owner
   -   nfc: bool,   // Activate or Deactivate
   -   types: bool, // Physical or Virtual
   -   kind: u8,    // 0 = Debit, 1= Credit, 2=Prepaid, etc
   -   brand: u8,   // 0 = VISA, 1 = MASTERCARD, 2 = AMEX, etc
 
-- ChangeInfo: Si fuera necesario es posible realizar cambios en la metadata de la tarjeta, por ejemplo para activar o desactivar los pagos contactless.
+- ChangeInfo: If necessary, it is possible to make changes to the card's metadata, for example to activate or deactivate contactless payments.
 
-- Purchase: Mediante esta funcion se realizan los pagos con SOL, esto lo hace con una transferencia simple.
-
-- PurchaseToken: Por ultimo esta funcion nos permite realizar pagos con SPL token, esto lo hace medinate CPI (cross program invocation), ya que necesitamos que la PDA firme la transferencia de tokens de los que es propietaria.
+- Purchase: Through this function, payments are made with SOL, this is done with a simple transfer.
+  
+- PurchaseToken: Finally, this function allows us to make payments with SPL tokens. This is done through CPI (cross program invocation), since we need the PDA to sign the transfer of tokens that it owns.
 
 All technical implementations for this program are included here.
 
@@ -165,7 +165,7 @@ All technical implementations for this program are included here.
 
 ### Screen:
 
-Todo esto en conjunto lo desplegamos en una UI sencilla donde el usuario puede recargar como una tarjeta prepago su tajeta virutal, la cual esta ligada como dijimos con su tarjeta fisica.
+We deploy all of this together in a simple UI where the user can recharge their virtual card like a prepaid card, which is linked, as we said, to their physical card.
 
 <img src="./Images/card1.png" width="32%"> <img src="./Images/card2.png" width="32%"> <img src="./Images/card3.png" width="32%">
 
@@ -175,26 +175,26 @@ All technical implementations for this tab are included here.
 
 ## On/Off Ramp:
 
-Los servicios de TradFi los realizamos mediante las API de Stripe. Los cuales nos permiten tener las siguientes features en la app.
+We provide TradFi services through Stripe APIs, which allow us to have the following features in the app.
 
-- eWallet: Al momento de tener los servicios de Stripe activos podemos crear eWallets donde los usuarios puedan tener su dinero TradFi.
-- Currencies: Segun la jurisdiccion del usuario podra tener su propia moneda en la aplicacion, por el momento solo somos compatibles con USD (US Dollar), EUR (Euro) y MXN (Mexican Peso).
+- eWallet: When Stripe services are active, we can create eWallets where users can have their TradFi money.
+- Currencies: Depending on the user's jurisdiction, they may have their own currency in the app. At the moment, we only support USD (US Dollar), EUR (Euro), and MXN (Mexican Peso).
 
 ### On Ramp:
 
-El servicio de On Ramp es completamente controlado desde Google Cloud, ya que no se requiere ninguna firma del usuario para realizar una transferencia desde Stripe a la cuenta de la empresa, asi como en la misma cloud realizamos la transaccion en la red de solana para transferirle el token deseado al usuario.
+The On Ramp service is completely controlled from Google Cloud, since no user signature is required to make a transfer from Stripe to the company account, and in the same cloud we carry out the transaction in the Solana network to transfer the desired token to the user.
 
 <img src="./Images/onramp.png" width="100%">
 
 ### Off Ramp:
 
-El servicio de Off Ramp es un poco diferente, ya que requiere realizar primero la transferencia en crytpto desde la cuenta del usuario, asi que el diagrama de transferencia es el siguiente, aunque comparte mucha simulitud con el anterior.
+The Off Ramp service is a little different, as it requires first making the cryptocurrency transfer from the user's account, so the transfer diagram is as follows, although it shares a lot of similarity with the previous one.
 
 <img src="./Images/offramp.png" width="100%">
  
 ### Screen:
 
-Esta interfaz nos permite gestionar nuestro dinero TradFi y a su vez poder hacer On/Off ramp de nuestros assets entre si con un solo clic.
+This interface allows us to manage our TradFi money and at the same time be able to On/Off ramp our assets between each other with a single click.
 
 <img src="./Images/tradfi1.png" width="32%"> <img src="./Images/tradfi2.png" width="32%"> <img src="./Images/tradfi3.png" width="32%">
 
@@ -205,9 +205,9 @@ All technical implementations for this tab are included here.
 
 ## Vybe Network:
 
-Se utilizo la siguiente API de Vybe Network con el fin de mejorar la UI de nuestra aplicacion asi como obtener datos de forma mas fiable y sencilla.
+The following Vybe Network API was used in order to improve the UI of our application as well as to obtain data in a more reliable and simple way.
 
-- Token Balance: Debido a que tenemos que estar monitorizando los balances simultaneamente de 3 cuentas que estan ligadas a nuestra app, ademas de ver el balance de multiples tokens, se decidio utilizar esta API.
+- Token Balance: Since we need to monitor the balances of 3 accounts linked to our app simultaneously, as well as view the balance of multiple tokens, it was decided to use this API.
 
         fetch(
             `https://api.vybenetwork.xyz/account/token-balance/${publicKey}`,
